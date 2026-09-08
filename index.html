@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Liste de courses</title>
+
+<!-- PWA / iPhone "add to home screen" -->
+<link rel="manifest" href="manifest.json" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Courses" />
+<link rel="apple-touch-icon" href="icon-192.png" />
+<meta name="theme-color" content="#1F2E23" />
+
+<style>
+  :root{
+    --bg: #F1F4EC;
+    --panel: #FFFFFF;
+    --ink: #1F2E23;
+    --ink-soft: #52604F;
+    --line: #DCE3D3;
+    --mustard: #D9A441;
+    --mustard-deep: #B8842B;
+    --rust: #B5533C;
+    --sage-tag: #E4EBDA;
+  }
+  *{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body{ margin:0; height:100%; }
+  body{
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  header.top{
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 10;
+    padding: calc(14px + env(safe-area-inset-top)) 16px 0;
+    border-bottom: 2px solid var(--ink);
+  }
+  header.top h1{
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 12px;
+    letter-spacing: -0.01em;
+  }
+
+  nav.tabs{
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    scrollbar-width: none;
+  }
+  nav.tabs::-webkit-scrollbar{ display: none; }
+  nav.tabs button{
+    flex-shrink: 0;
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 600;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    color: var(--ink-soft);
+    border-radius: 999px;
+    padding: 7px 14px;
+    cursor: pointer;
+  }
+  nav.tabs button.active{
+    background: var(--ink);
+    color: #FFFDF8;
+    border-color: var(--ink);
+  }
+
+  main{ padding: 16px; max-width: 620px; margin: 0 auto; }
+
+  .empty{
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: 14px;
+    padding: 36px 20px;
+    border: 1px dashed var(--line);
+    border-radius: 10px;
+  }
+
+  ul.list{ list-style: none; padding: 0; margin: 0 0 16px; display: flex; flex-direction: column; gap: 8px; }
+
+  li.item{
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--mustard);
+    border-radius: 8px;
+    padding: 11px 13px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  li.item .info{ min-width: 0; }
+  li.item .nom{ font-size: 15px; font-weight: 600; word-break: break-word; }
+  li.item .qte{
+    display: inline-block;
+    background: var(--sage-tag);
+    border-radius: 5px;
+    padding: 1px 7px;
+    font-weight: 500;
+    font-size: 12px;
+    color: var(--ink);
+    margin-top: 3px;
+  }
+  li.item .remarque{ font-size: 12px; color: var(--ink-soft); margin-top: 3px; font-style: italic; }
+
+  button.del{
+    flex-shrink: 0;
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--rust);
+    border-radius: 6px;
+    width: 30px; height: 30px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  form.add-form{
+    position: sticky;
+    bottom: 0;
+    background: var(--bg);
+    padding: 10px 0 calc(10px + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  form.add-form .row{ display: flex; gap: 8px; }
+  form.add-form input{
+    font-family: inherit;
+    font-size: 15px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px 12px;
+    background: var(--panel);
+    color: var(--ink);
+    width: 100%;
+  }
+  form.add-form input:focus{ outline: none; border-color: var(--mustard-deep); }
+  .f-nom{ flex: 1.6; }
+  .f-qte{ flex: 1; }
+  form.add-form input.f-remarque{ font-size: 13px; }
+
+  button.add-btn{
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 15px;
+    background: var(--ink);
+    color: #FFFDF8;
+    border: none;
+    border-radius: 8px;
+    padding: 11px 16px;
+    cursor: pointer;
+  }
+  button.add-btn:disabled{ background: #A9B3A3; }
+
+  .status{ font-size: 12px; text-align: center; padding: 8px 0; color: var(--ink-soft); }
+  .status.err{ color: var(--rust); }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <h1>Liste de courses</h1>
+  <nav class="tabs" id="tabs"></nav>
+</header>
+
+<main>
+  <div id="listContainer"></div>
+  <div id="statusBox"></div>
+</main>
+
+<form class="add-form" id="addForm">
+  <div class="row">
+    <input class="f-nom" id="inputNom" type="text" placeholder="Ajouter un ingrédient" required />
+  </div>
+  <div class="row">
+    <input class="f-qte" id="inputQte" type="text" placeholder="Quantité" />
+    <input class="f-remarque" id="inputRemarque" type="text" placeholder="Remarque" />
+    <button class="add-btn" type="submit" id="submitBtn">Ajouter</button>
+  </div>
+</form>
+
+<!-- Firebase (gratuit) pour la synchro en temps réel entre vos deux téléphones -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+  import {
+    getFirestore, collection, addDoc, deleteDoc, doc,
+    onSnapshot, query, orderBy, serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+  // ==== ÉTAPE À TOI : colle ici la config de TON projet Firebase (voir le guide) ====
+  const firebaseConfig = {
+    apiKey: "AIzaSyCmUr3kgh1alYxd-LOAAZlzFdW8is3LTh4",
+    authDomain: "j---shopping-list-2c904.firebaseapp.com",
+    projectId: "j---shopping-list-2c904",
+    storageBucket: "j---shopping-list-2c904.firebasestorage.app",
+    messagingSenderId: "872014163579",
+    appId: "1:872014163579:web:0be12f52ef4b577ab67cde"
+  };
+  // ===================================================================================
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const itemsRef = collection(db, "items");
+
+  const STORES = ["Delhaize", "Carrefour", "Lidl", "Action", "Albert Heijn", "Amazon", "Ikea", "Autre"];
+  let activeStore = STORES[0];
+  let allItems = [];
+
+  const tabsEl = document.getElementById("tabs");
+  const listEl = document.getElementById("listContainer");
+  const statusEl = document.getElementById("statusBox");
+  const form = document.getElementById("addForm");
+  const inputNom = document.getElementById("inputNom");
+  const inputQte = document.getElementById("inputQte");
+  const inputRemarque = document.getElementById("inputRemarque");
+  const submitBtn = document.getElementById("submitBtn");
+
+  function renderTabs(){
+    tabsEl.innerHTML = "";
+    STORES.forEach(store => {
+      const btn = document.createElement("button");
+      btn.textContent = store;
+      if (store === activeStore) btn.classList.add("active");
+      btn.onclick = () => { activeStore = store; renderTabs(); renderList(); };
+      tabsEl.appendChild(btn);
+    });
+  }
+
+  function renderList(){
+    const items = allItems.filter(it => it.store === activeStore);
+    if (items.length === 0){
+      listEl.innerHTML = `<div class="empty">Rien à ajouter pour ${activeStore} pour l'instant.</div>`;
+      return;
+    }
+    listEl.innerHTML = "";
+    const ul = document.createElement("ul");
+    ul.className = "list";
+    items.forEach(it => {
+      const li = document.createElement("li");
+      li.className = "item";
+      li.innerHTML = `
+        <div class="info">
+          <div class="nom"></div>
+          ${it.qte ? `<div class="qte"></div>` : ""}
+          ${it.remarque ? `<div class="remarque"></div>` : ""}
+        </div>
+        <button class="del" title="Supprimer">×</button>
+      `;
+      li.querySelector(".nom").textContent = it.nom;
+      if (it.qte) li.querySelector(".qte").textContent = it.qte;
+      if (it.remarque) li.querySelector(".remarque").textContent = it.remarque;
+      li.querySelector(".del").onclick = () => handleDelete(it.id);
+      ul.appendChild(li);
+    });
+    listEl.appendChild(ul);
+  }
+
+  function setStatus(msg, isErr){
+    statusEl.textContent = msg || "";
+    statusEl.className = "status" + (isErr ? " err" : "");
+  }
+
+  onSnapshot(query(itemsRef, orderBy("createdAt", "desc")), (snap) => {
+    allItems = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderList();
+    setStatus("");
+  }, (err) => {
+    setStatus("Connexion à la base impossible. Vérifie ta config Firebase.", true);
+    console.error(err);
+  });
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const nom = inputNom.value.trim();
+    if (!nom) return;
+    const qte = inputQte.value.trim();
+    const remarque = inputRemarque.value.trim();
+    submitBtn.disabled = true;
+    try {
+      await addDoc(itemsRef, {
+        store: activeStore,
+        nom, qte, remarque,
+        createdAt: serverTimestamp()
+      });
+      inputNom.value = "";
+      inputQte.value = "";
+      inputRemarque.value = "";
+      inputNom.focus();
+    } catch (err) {
+      setStatus("Erreur d'ajout, réessaie.", true);
+      console.error(err);
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+
+  async function handleDelete(id){
+    try {
+      await deleteDoc(doc(db, "items", id));
+    } catch (err) {
+      setStatus("Erreur de suppression, réessaie.", true);
+      console.error(err);
+    }
+  }
+
+  renderTabs();
+  renderList();
+</script>
+
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("sw.js").catch(() => {});
+    });
+  }
+</script>
+
+</body>
+</html>
