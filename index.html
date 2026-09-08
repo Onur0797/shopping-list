@@ -203,12 +203,140 @@
 
   .status{ font-size: 12px; text-align: center; padding: 8px 0; color: var(--ink-soft); }
   .status.err{ color: var(--rust); }
+
+  .top-row{ display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  header.top h1{ margin: 0; }
+  button.card-btn{
+    flex-shrink: 0;
+    font-size: 20px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    width: 40px; height: 40px;
+    cursor: pointer;
+    line-height: 1;
+  }
+
+  .card-overlay{
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    z-index: 100;
+    overflow-y: auto;
+    padding: calc(14px + env(safe-area-inset-top)) 16px calc(24px + env(safe-area-inset-bottom));
+  }
+  .card-overlay-header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 14px;
+    margin-bottom: 18px;
+  }
+  .card-overlay-title{ font-size: 19px; font-weight: 700; }
+  button.card-close{
+    flex-shrink: 0;
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    width: 34px; height: 34px;
+    font-size: 18px;
+    cursor: pointer;
+    color: var(--ink-soft);
+  }
+
+  .card-image-wrap{ display: flex; justify-content: center; margin-bottom: 16px; }
+  .card-image-wrap img{
+    max-width: 100%;
+    max-height: 340px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+  }
+  .card-actions{ display: flex; gap: 10px; }
+  .card-actions button{
+    flex: 1;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 14px;
+    border-radius: 8px;
+    padding: 11px;
+    cursor: pointer;
+    border: 1px solid var(--line);
+  }
+  .card-actions .replace-btn{ background: var(--panel); color: var(--ink); }
+  .card-actions .delete-btn{ background: var(--panel); color: var(--rust); border-color: var(--rust); }
+
+  .card-choose-btn{
+    display: block;
+    width: 100%;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 15px;
+    background: var(--ink);
+    color: #FFFDF8;
+    border: none;
+    border-radius: 8px;
+    padding: 14px;
+    cursor: pointer;
+    text-align: center;
+  }
+  .card-choose-btn:disabled{ background: #A9B3A3; }
+
+  .custom-list{ list-style: none; padding: 0; margin: 0 0 16px; display: flex; flex-direction: column; gap: 8px; }
+  .custom-list li{
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+  }
+  .custom-list li img{ width: 44px; height: 44px; object-fit: cover; border-radius: 6px; flex-shrink: 0; }
+  .custom-list li .name{ font-size: 15px; font-weight: 600; flex: 1; }
+  .custom-list li .chevron{ color: var(--ink-soft); font-size: 14px; }
+
+  .add-custom-form{ display: flex; gap: 8px; margin-bottom: 16px; }
+  .add-custom-form input{
+    flex: 1;
+    font-family: inherit;
+    font-size: 16px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  .add-custom-form button{
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 14px;
+    background: var(--ink);
+    color: #FFFDF8;
+    border: none;
+    border-radius: 8px;
+    padding: 0 16px;
+    cursor: pointer;
+  }
+
+  .card-back-btn{
+    background: transparent;
+    border: none;
+    color: var(--ink-soft);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0 0 14px;
+  }
 </style>
 </head>
 <body>
 
 <header class="top">
-  <h1>Liste de courses</h1>
+  <div class="top-row">
+    <h1>Liste de courses</h1>
+    <button class="card-btn" id="openCardBtn" title="Carte de fidélité">🎫</button>
+  </div>
   <nav class="tabs" id="tabs"></nav>
 </header>
 
@@ -228,6 +356,17 @@
   </div>
 </form>
 
+<!-- Écran séparé pour les cartes de fidélité, ne se superpose jamais à la liste de courses -->
+<div class="card-overlay" id="cardOverlay" style="display:none;">
+  <div class="card-overlay-header">
+    <div class="card-overlay-title" id="cardOverlayTitle"></div>
+    <button class="card-close" id="closeCardBtn">×</button>
+  </div>
+  <div id="cardOverlayBody"></div>
+</div>
+
+<input type="file" accept="image/*" id="cardFileInput" style="display:none;" />
+
 <!-- Rendu instantané des onglets et de la liste, sans attendre le réseau -->
 <script>
   window.__app = {
@@ -236,6 +375,13 @@
     allItems: [],
     ready: false,
     editingId: null,
+    loyaltyCards: {},
+    loyaltyReady: false,
+    customCards: [],
+    customReady: false,
+    viewingCustomId: null,
+    addingCustomCard: false,
+    fileInputContext: null,
   };
   window.__app.activeStore = window.__app.STORES[0];
 
@@ -247,6 +393,12 @@
   const inputQte = document.getElementById("inputQte");
   const inputRemarque = document.getElementById("inputRemarque");
   const submitBtn = document.getElementById("submitBtn");
+  const openCardBtn = document.getElementById("openCardBtn");
+  const closeCardBtn = document.getElementById("closeCardBtn");
+  const cardOverlay = document.getElementById("cardOverlay");
+  const cardOverlayTitle = document.getElementById("cardOverlayTitle");
+  const cardOverlayBody = document.getElementById("cardOverlayBody");
+  const cardFileInput = document.getElementById("cardFileInput");
 
   function renderTabs(){
     const { STORES, activeStore, allItems, ready } = window.__app;
@@ -350,6 +502,195 @@
     statusEl.className = "status" + (isErr ? " err" : "");
   }
 
+  function compressImage(file, maxDim, quality){
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      const reader = new FileReader();
+      reader.onload = (e) => { img.src = e.target.result; };
+      reader.onerror = reject;
+      img.onload = () => {
+        let { width, height } = img;
+        if (width > height && width > maxDim){ height = Math.round(height * (maxDim / width)); width = maxDim; }
+        else if (height > maxDim){ width = Math.round(width * (maxDim / height)); height = maxDim; }
+        const canvas = document.createElement("canvas");
+        canvas.width = width; canvas.height = height;
+        canvas.getContext("2d").drawImage(img, 0, 0, width, height);
+        // On réduit encore la qualité si besoin pour rester bien sous la limite de 1 Mo par fiche Firestore
+        let q = quality;
+        let dataUrl = canvas.toDataURL("image/jpeg", q);
+        while (dataUrl.length > 700000 && q > 0.35){
+          q -= 0.1;
+          dataUrl = canvas.toDataURL("image/jpeg", q);
+        }
+        if (dataUrl.length > 900000){
+          reject(new Error("Photo trop volumineuse même compressée, choisis-en une autre."));
+        } else {
+          resolve(dataUrl);
+        }
+      };
+      img.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function openCardOverlay(){
+    window.__app.viewingCustomId = null;
+    window.__app.addingCustomCard = false;
+    cardOverlay.style.display = "block";
+    renderCardOverlay();
+  }
+  function closeCardOverlay(){
+    cardOverlay.style.display = "none";
+  }
+  openCardBtn.onclick = openCardOverlay;
+  closeCardBtn.onclick = closeCardOverlay;
+
+  function renderCardOverlay(){
+    const store = window.__app.activeStore;
+    const { loyaltyCards, loyaltyReady, customCards, customReady, viewingCustomId, addingCustomCard } = window.__app;
+
+    if (store !== "Autre"){
+      cardOverlayTitle.textContent = `Carte de fidélité — ${store}`;
+      if (!loyaltyReady){
+        cardOverlayBody.innerHTML = `<p class="status">Chargement…</p>`;
+        return;
+      }
+      const url = loyaltyCards[store];
+      if (!url){
+        cardOverlayBody.innerHTML = `<button class="card-choose-btn" id="chooseBtn">📷 Choisir une photo</button>`;
+        document.getElementById("chooseBtn").onclick = () => {
+          window.__app.fileInputContext = { type: "store", store };
+          cardFileInput.click();
+        };
+        return;
+      }
+      cardOverlayBody.innerHTML = `
+        <div class="card-image-wrap"><img src="${url}" alt="Carte ${store}" /></div>
+        <div class="card-actions">
+          <button class="replace-btn" id="replaceBtn">Remplacer</button>
+          <button class="delete-btn" id="deleteBtn">Supprimer</button>
+        </div>
+      `;
+      document.getElementById("replaceBtn").onclick = () => {
+        if (confirm("Remplacer la photo actuelle ? L'ancienne sera définitivement perdue.")){
+          window.__app.fileInputContext = { type: "store", store };
+          cardFileInput.click();
+        }
+      };
+      document.getElementById("deleteBtn").onclick = async () => {
+        if (confirm("Supprimer définitivement cette carte ?")){
+          try { await window.__app.deleteLoyaltyCard(store); }
+          catch (err) { setStatus("Erreur de suppression, réessaie.", true); console.error(err); }
+        }
+      };
+      return;
+    }
+
+    // Onglet "Autre" : liste de cartes diverses nommées
+    if (!customReady){
+      cardOverlayTitle.textContent = "Cartes diverses";
+      cardOverlayBody.innerHTML = `<p class="status">Chargement…</p>`;
+      return;
+    }
+
+    if (viewingCustomId){
+      const c = customCards.find(x => x.id === viewingCustomId);
+      if (!c){ window.__app.viewingCustomId = null; return renderCardOverlay(); }
+      cardOverlayTitle.textContent = c.name;
+      cardOverlayBody.innerHTML = `
+        <button class="card-back-btn" id="backBtn">← Retour à la liste</button>
+        <div class="card-image-wrap"><img src="${c.imageUrl}" alt="${c.name}" /></div>
+        <div class="card-actions">
+          <button class="replace-btn" id="replaceBtn">Remplacer</button>
+          <button class="delete-btn" id="deleteBtn">Supprimer</button>
+        </div>
+      `;
+      document.getElementById("backBtn").onclick = () => { window.__app.viewingCustomId = null; renderCardOverlay(); };
+      document.getElementById("replaceBtn").onclick = () => {
+        if (confirm("Remplacer la photo actuelle ? L'ancienne sera définitivement perdue.")){
+          window.__app.fileInputContext = { type: "customReplace", id: c.id };
+          cardFileInput.click();
+        }
+      };
+      document.getElementById("deleteBtn").onclick = async () => {
+        if (confirm(`Supprimer définitivement la carte "${c.name}" ?`)){
+          try {
+            await window.__app.deleteCustomCard(c.id);
+            window.__app.viewingCustomId = null;
+          } catch (err) { setStatus("Erreur de suppression, réessaie.", true); console.error(err); }
+        }
+      };
+      return;
+    }
+
+    cardOverlayTitle.textContent = "Cartes diverses";
+
+    if (addingCustomCard){
+      cardOverlayBody.innerHTML = `
+        <button class="card-back-btn" id="backBtn">← Annuler</button>
+        <form class="add-custom-form" id="customNameForm">
+          <input type="text" id="customNameInput" placeholder="Nom de la carte (ex. Fnac)" required />
+          <button type="submit">Suivant</button>
+        </form>
+      `;
+      document.getElementById("backBtn").onclick = () => { window.__app.addingCustomCard = false; renderCardOverlay(); };
+      document.getElementById("customNameForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const name = document.getElementById("customNameInput").value.trim();
+        if (!name) return;
+        window.__app.fileInputContext = { type: "customNew", name };
+        cardFileInput.click();
+      });
+      return;
+    }
+
+    let listHtml = "";
+    if (customCards.length === 0){
+      listHtml = `<p class="empty">Aucune carte ajoutée pour l'instant.</p>`;
+    } else {
+      listHtml = `<ul class="custom-list">` + customCards.map(c => `
+        <li data-id="${c.id}">
+          <img src="${c.imageUrl}" alt="${c.name}" />
+          <span class="name"></span>
+          <span class="chevron">›</span>
+        </li>
+      `).join("") + `</ul>`;
+    }
+    cardOverlayBody.innerHTML = listHtml + `<button class="card-choose-btn" id="addCustomBtn">+ Ajouter une carte</button>`;
+    cardOverlayBody.querySelectorAll(".custom-list li").forEach(li => {
+      const id = li.getAttribute("data-id");
+      li.querySelector(".name").textContent = customCards.find(c => c.id === id).name;
+      li.onclick = () => { window.__app.viewingCustomId = id; renderCardOverlay(); };
+    });
+    document.getElementById("addCustomBtn").onclick = () => { window.__app.addingCustomCard = true; renderCardOverlay(); };
+  }
+
+  cardFileInput.addEventListener("change", async () => {
+    const file = cardFileInput.files[0];
+    const ctx = window.__app.fileInputContext;
+    cardFileInput.value = "";
+    if (!file || !ctx) return;
+    cardOverlayBody.innerHTML = `<p class="status">Compression et envoi de la photo…</p>`;
+    try {
+      const dataUrl = await compressImage(file, 900, 0.6);
+      if (ctx.type === "store"){
+        await window.__app.saveLoyaltyCard(ctx.store, dataUrl);
+      } else if (ctx.type === "customNew"){
+        await window.__app.addCustomCard(ctx.name, dataUrl);
+        window.__app.addingCustomCard = false;
+      } else if (ctx.type === "customReplace"){
+        await window.__app.updateCustomCardImage(ctx.id, dataUrl);
+      }
+    } catch (err) {
+      setStatus(err.message && err.message.includes("volumineuse") ? err.message : "Erreur d'envoi de la photo, réessaie.", true);
+      console.error(err);
+    } finally {
+      window.__app.fileInputContext = null;
+      renderCardOverlay();
+    }
+  });
+
+
   function refreshSubmitState(){
     submitBtn.disabled = !window.__app.ready || !inputNom.value.trim();
     submitBtn.textContent = window.__app.ready ? "Ajouter" : "Connexion…";
@@ -387,6 +728,7 @@
   window.__app.renderTabs = renderTabs;
   window.__app.setStatus = setStatus;
   window.__app.refreshSubmitState = refreshSubmitState;
+  window.__app.renderCardOverlay = () => { if (cardOverlay.style.display !== "none") renderCardOverlay(); };
 
   renderTabs();
   renderList();
@@ -398,7 +740,7 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
   import {
-    getFirestore, collection, addDoc, deleteDoc, updateDoc, doc,
+    getFirestore, collection, addDoc, deleteDoc, updateDoc, setDoc, doc,
     onSnapshot, query, orderBy, serverTimestamp
   } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
@@ -414,6 +756,8 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
   const itemsRef = collection(db, "items");
+  const loyaltyCardsRef = collection(db, "loyaltyCards");
+  const customCardsRef = collection(db, "customCards");
 
   onSnapshot(query(itemsRef, orderBy("createdAt", "desc")), (snap) => {
     window.__app.allItems = snap.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -427,6 +771,20 @@
     console.error(err);
   });
 
+  onSnapshot(loyaltyCardsRef, (snap) => {
+    const cards = {};
+    snap.docs.forEach(d => { cards[d.id] = d.data().imageUrl; });
+    window.__app.loyaltyCards = cards;
+    window.__app.loyaltyReady = true;
+    window.__app.renderCardOverlay();
+  }, (err) => console.error(err));
+
+  onSnapshot(query(customCardsRef, orderBy("createdAt", "asc")), (snap) => {
+    window.__app.customCards = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    window.__app.customReady = true;
+    window.__app.renderCardOverlay();
+  }, (err) => console.error(err));
+
   window.__app.addItem = (item) => addDoc(itemsRef, { ...item, createdAt: serverTimestamp() });
   window.__app.updateItem = (id, data) => updateDoc(doc(db, "items", id), data);
   window.__app.deleteItem = async (id) => {
@@ -437,7 +795,21 @@
       console.error(err);
     }
   };
+
+  window.__app.saveLoyaltyCard = (store, imageUrl) =>
+    setDoc(doc(db, "loyaltyCards", store), { imageUrl, updatedAt: serverTimestamp() });
+
+  window.__app.deleteLoyaltyCard = (store) => deleteDoc(doc(db, "loyaltyCards", store));
+
+  window.__app.addCustomCard = (name, imageUrl) =>
+    addDoc(customCardsRef, { name, imageUrl, createdAt: serverTimestamp() });
+
+  window.__app.updateCustomCardImage = (id, imageUrl) =>
+    updateDoc(doc(db, "customCards", id), { imageUrl });
+
+  window.__app.deleteCustomCard = (id) => deleteDoc(doc(db, "customCards", id));
 </script>
+
 
 </body>
 </html>
