@@ -25,17 +25,8 @@
     --rust: #B5533C;
     --sage-tag: #E4EBDA;
   }
-
-  *{
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  html, body{
-    margin:0;
-    height:100%;
-  }
-
+  *{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body{ margin:0; height:100%; }
   body{
     background: var(--bg);
     color: var(--ink);
@@ -51,7 +42,6 @@
     padding: calc(14px + env(safe-area-inset-top)) 16px 0;
     border-bottom: 2px solid var(--ink);
   }
-
   header.top h1{
     font-size: 22px;
     font-weight: 700;
@@ -66,11 +56,7 @@
     padding-bottom: 10px;
     scrollbar-width: none;
   }
-
-  nav.tabs::-webkit-scrollbar{
-    display: none;
-  }
-
+  nav.tabs::-webkit-scrollbar{ display: none; }
   nav.tabs button{
     flex-shrink: 0;
     font-family: inherit;
@@ -83,18 +69,13 @@
     padding: 7px 14px;
     cursor: pointer;
   }
-
   nav.tabs button.active{
     background: var(--ink);
     color: #FFFDF8;
     border-color: var(--ink);
   }
 
-  main{
-    padding: 16px;
-    max-width: 620px;
-    margin: 0 auto;
-  }
+  main{ padding: 16px; max-width: 620px; margin: 0 auto; }
 
   .empty{
     text-align: center;
@@ -105,14 +86,7 @@
     border-radius: 10px;
   }
 
-  ul.list{
-    list-style: none;
-    padding: 0;
-    margin: 0 0 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
+  ul.list{ list-style: none; padding: 0; margin: 0 0 16px; display: flex; flex-direction: column; gap: 8px; }
 
   li.item{
     background: var(--panel);
@@ -125,17 +99,8 @@
     justify-content: space-between;
     gap: 10px;
   }
-
-  li.item .info{
-    min-width: 0;
-  }
-
-  li.item .nom{
-    font-size: 15px;
-    font-weight: 600;
-    word-break: break-word;
-  }
-
+  li.item .info{ min-width: 0; }
+  li.item .nom{ font-size: 15px; font-weight: 600; word-break: break-word; }
   li.item .qte{
     display: inline-block;
     background: var(--sage-tag);
@@ -146,63 +111,30 @@
     color: var(--ink);
     margin-top: 3px;
   }
-
-  li.item .remarque{
-    font-size: 12px;
-    color: var(--ink-soft);
-    margin-top: 3px;
-    font-style: italic;
-  }
+  li.item .remarque{ font-size: 12px; color: var(--ink-soft); margin-top: 3px; font-style: italic; }
 
   li.item.deleting{
     background: #FBEDE9;
     border-color: var(--rust);
   }
 
-  .item-actions{
-    display: flex;
-    gap: 6px;
-    flex-shrink: 0;
-  }
+  .item-actions{ display: flex; gap: 6px; flex-shrink: 0; }
 
-  button.del,
-  button.edit{
+  button.del, button.edit{
     flex-shrink: 0;
     background: transparent;
     border: 1px solid var(--line);
     border-radius: 6px;
-    width: 30px;
-    height: 30px;
+    width: 30px; height: 30px;
     font-size: 15px;
     cursor: pointer;
   }
+  button.del{ color: var(--rust); }
+  button.del.flash{ background: var(--rust); color: #fff; border-color: var(--rust); }
+  button.edit{ color: var(--ink-soft); }
+  button.edit:hover{ border-color: var(--mustard-deep); color: var(--ink); }
 
-  button.del{
-    color: var(--rust);
-  }
-
-  button.del.flash{
-    background: var(--rust);
-    color: #fff;
-    border-color: var(--rust);
-  }
-
-  button.edit{
-    color: var(--ink-soft);
-  }
-
-  button.edit:hover{
-    border-color: var(--mustard-deep);
-    color: var(--ink);
-  }
-
-  .edit-form{
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    width: 100%;
-  }
-
+  .edit-form{ display: flex; flex-direction: column; gap: 6px; width: 100%; }
   .edit-form input{
     font-family: inherit;
     font-size: 14px;
@@ -213,23 +145,9 @@
     color: var(--ink);
     width: 100%;
   }
-
-  .edit-form input:focus{
-    outline: none;
-    border-color: var(--mustard-deep);
-  }
-
-  .edit-form .edit-row{
-    display: flex;
-    gap: 6px;
-  }
-
-  .edit-form .edit-actions{
-    display: flex;
-    gap: 8px;
-    margin-top: 2px;
-  }
-
+  .edit-form input:focus{ outline: none; border-color: var(--mustard-deep); }
+  .edit-form .edit-row{ display: flex; gap: 6px; }
+  .edit-form .edit-actions{ display: flex; gap: 8px; margin-top: 2px; }
   .edit-form button{
     font-family: inherit;
     font-weight: 600;
@@ -239,17 +157,8 @@
     cursor: pointer;
     border: 1px solid var(--line);
   }
-
-  .edit-form button.save{
-    background: var(--ink);
-    color: #FFFDF8;
-    border-color: var(--ink);
-  }
-
-  .edit-form button.cancel{
-    background: var(--panel);
-    color: var(--ink-soft);
-  }
+  .edit-form button.save{ background: var(--ink); color: #FFFDF8; border-color: var(--ink); }
+  .edit-form button.cancel{ background: var(--panel); color: var(--ink-soft); }
 
   form.add-form{
     position: sticky;
@@ -263,12 +172,7 @@
     max-width: 620px;
     margin: 0 auto;
   }
-
-  form.add-form .row{
-    display: flex;
-    gap: 8px;
-  }
-
+  form.add-form .row{ display: flex; gap: 8px; }
   form.add-form input{
     font-family: inherit;
     font-size: 15px;
@@ -279,26 +183,10 @@
     color: var(--ink);
     width: 100%;
   }
-
-  form.add-form input:focus{
-    outline: none;
-    border-color: var(--mustard-deep);
-  }
-
-  .f-nom{
-    flex: 1.6;
-  }
-
-  .f-qte{
-    flex: 0 1 96px;
-    min-width: 84px;
-  }
-
-  form.add-form input.f-remarque{
-    flex: 1.2 1 100px;
-    min-width: 90px;
-    font-size: 13px;
-  }
+  form.add-form input:focus{ outline: none; border-color: var(--mustard-deep); }
+  .f-nom{ flex: 1.6; }
+  .f-qte{ flex: 0 1 96px; min-width: 84px; }
+  form.add-form input.f-remarque{ flex: 1.2 1 100px; min-width: 90px; font-size: 13px; }
 
   button.add-btn{
     font-family: inherit;
@@ -311,120 +199,13 @@
     padding: 11px 16px;
     cursor: pointer;
   }
+  button.add-btn:disabled{ background: #A9B3A3; }
 
-  button.add-btn:disabled{
-    background: #A9B3A3;
-  }
-
-  .loyalty{
-    background: var(--panel);
-    border: 1px solid var(--line);
-    border-left: 4px solid var(--ink);
-    border-radius: 8px;
-    padding: 12px 14px;
-    margin-bottom: 14px;
-  }
-
-  .loyalty .loyalty-title{
-    font-size: 12.5px;
-    font-weight: 700;
-    color: var(--ink-soft);
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-    margin-bottom: 8px;
-  }
-
-  .loyalty .loyalty-empty-btn{
-    font-family: inherit;
-    font-size: 13.5px;
-    font-weight: 600;
-    background: var(--sage-tag);
-    color: var(--ink);
-    border: none;
-    border-radius: 6px;
-    padding: 8px 12px;
-    cursor: pointer;
-  }
-
-  .loyalty .loyalty-view{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .loyalty .loyalty-view svg{
-    max-width: 100%;
-  }
-
-  .loyalty .loyalty-code{
-    font-size: 13px;
-    color: var(--ink-soft);
-    letter-spacing: 0.04em;
-  }
-
-  .loyalty .loyalty-edit-btn{
-    align-self: flex-end;
-    font-family: inherit;
-    font-size: 12px;
-    font-weight: 600;
-    background: transparent;
-    color: var(--ink-soft);
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    padding: 4px 10px;
-    cursor: pointer;
-    margin-top: 4px;
-  }
-
-  .loyalty .loyalty-form{
-    display: flex;
-    gap: 8px;
-  }
-
-  .loyalty .loyalty-form input{
-    flex: 1;
-    font-family: inherit;
-    font-size: 14px;
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    padding: 8px 10px;
-  }
-
-  .loyalty .loyalty-form input:focus{
-    outline: none;
-    border-color: var(--mustard-deep);
-  }
-
-  .loyalty .loyalty-form button{
-    font-family: inherit;
-    font-weight: 600;
-    font-size: 13px;
-    background: var(--ink);
-    color: #FFFDF8;
-    border: none;
-    border-radius: 6px;
-    padding: 0 14px;
-    cursor: pointer;
-  }
-
-  .status{
-    font-size: 12px;
-    text-align: center;
-    padding: 8px 0;
-    color: var(--ink-soft);
-  }
-
-  .status.err{
-    color: var(--rust);
-  }
+  .status{ font-size: 12px; text-align: center; padding: 8px 0; color: var(--ink-soft); }
+  .status.err{ color: var(--rust); }
 </style>
 </head>
-
 <body>
-
-<!-- Générateur de code-barres pour les cartes de fidélité -->
-<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 
 <header class="top">
   <h1>Liste de courses</h1>
@@ -432,962 +213,230 @@
 </header>
 
 <main>
-  <div id="loyaltyPanel"></div>
   <div id="listContainer"></div>
   <div id="statusBox"></div>
 </main>
 
 <form class="add-form" id="addForm">
   <div class="row">
-    <input
-      class="f-nom"
-      id="inputNom"
-      type="text"
-      placeholder="Ajouter un ingrédient"
-      required
-    />
+    <input class="f-nom" id="inputNom" type="text" placeholder="Ajouter un ingrédient" required />
   </div>
-
   <div class="row">
-    <input
-      class="f-qte"
-      id="inputQte"
-      type="text"
-      placeholder="Quantité"
-    />
-
-    <input
-      class="f-remarque"
-      id="inputRemarque"
-      type="text"
-      placeholder="Remarque"
-    />
-
-    <button
-      class="add-btn"
-      type="submit"
-      id="submitBtn"
-    >
-      Ajouter
-    </button>
+    <input class="f-qte" id="inputQte" type="text" placeholder="Quantité" />
+    <input class="f-remarque" id="inputRemarque" type="text" placeholder="Remarque" />
+    <button class="add-btn" type="submit" id="submitBtn">Ajouter</button>
   </div>
 </form>
 
-
-<!-- Rendu instantané des onglets et de la liste -->
+<!-- Rendu instantané des onglets et de la liste, sans attendre le réseau -->
 <script>
   window.__app = {
-    STORES: [
-      "Delhaize",
-      "Carrefour",
-      "Lidl",
-      "Action",
-      "Albert Heijn",
-      "Amazon",
-      "Ikea",
-      "Autre"
-    ],
-
+    STORES: ["Delhaize", "Carrefour", "Lidl", "Action", "Albert Heijn", "Amazon", "Ikea", "Autre"],
     activeStore: null,
     allItems: [],
     ready: false,
     editingId: null,
-    loyaltyCards: {},
-    loyaltyReady: false,
-    editingLoyalty: false,
   };
-
   window.__app.activeStore = window.__app.STORES[0];
-
 
   const tabsEl = document.getElementById("tabs");
   const listEl = document.getElementById("listContainer");
-  const loyaltyEl = document.getElementById("loyaltyPanel");
   const statusEl = document.getElementById("statusBox");
-
   const form = document.getElementById("addForm");
   const inputNom = document.getElementById("inputNom");
   const inputQte = document.getElementById("inputQte");
   const inputRemarque = document.getElementById("inputRemarque");
   const submitBtn = document.getElementById("submitBtn");
 
-
-  function setStatus(msg, isErr = false){
-    statusEl.textContent = msg || "";
-    statusEl.className = "status" + (isErr ? " err" : "");
-  }
-
-
   function renderTabs(){
-
-    const {
-      STORES,
-      activeStore,
-      allItems,
-      ready
-    } = window.__app;
-
+    const { STORES, activeStore, allItems, ready } = window.__app;
     tabsEl.innerHTML = "";
-
     STORES.forEach(store => {
-
       const btn = document.createElement("button");
-
-      const count = ready
-        ? allItems.filter(it => it.store === store).length
-        : 0;
-
-      btn.textContent = count > 0
-        ? `${store} (${count})`
-        : store;
-
-      if (store === activeStore){
-        btn.classList.add("active");
-      }
-
-      btn.onclick = () => {
-
-        window.__app.activeStore = store;
-        window.__app.editingLoyalty = false;
-
-        renderTabs();
-        renderList();
-        renderLoyalty();
-      };
-
+      const count = ready ? allItems.filter(it => it.store === store).length : 0;
+      btn.textContent = count > 0 ? `${store} (${count})` : store;
+      if (store === activeStore) btn.classList.add("active");
+      btn.onclick = () => { window.__app.activeStore = store; renderTabs(); renderList(); };
       tabsEl.appendChild(btn);
     });
   }
 
-
   function renderList(){
-
-    const {
-      allItems,
-      activeStore,
-      ready
-    } = window.__app;
-
+    const { allItems, activeStore, ready } = window.__app;
     if (!ready){
-
-      listEl.innerHTML = `
-        <div class="empty">
-          Connexion à la liste en cours…
-        </div>
-      `;
-
+      listEl.innerHTML = `<div class="empty">Connexion à la liste en cours…</div>`;
       return;
     }
-
-
-    const items = allItems.filter(
-      it => it.store === activeStore
-    );
-
-
+    const items = allItems.filter(it => it.store === activeStore);
     if (items.length === 0){
-
-      listEl.innerHTML = `
-        <div class="empty">
-          Rien à ajouter pour ${activeStore} pour l'instant.
-        </div>
-      `;
-
+      listEl.innerHTML = `<div class="empty">Rien à ajouter pour ${activeStore} pour l'instant.</div>`;
       return;
     }
-
-
     listEl.innerHTML = "";
-
     const ul = document.createElement("ul");
-
     ul.className = "list";
-
-
     items.forEach(it => {
-
       const li = document.createElement("li");
-
       li.className = "item";
 
-
-      /* MODE MODIFICATION */
-
       if (window.__app.editingId === it.id){
-
         li.innerHTML = `
           <form class="edit-form">
-
-            <input
-              class="e-nom"
-              type="text"
-              placeholder="Nom"
-              required
-            />
-
+            <input class="e-nom" type="text" placeholder="Nom" required />
             <div class="edit-row">
-
-              <input
-                class="e-qte"
-                type="text"
-                placeholder="Quantité"
-                style="flex:0 1 96px;"
-              />
-
-              <input
-                class="e-remarque"
-                type="text"
-                placeholder="Remarque"
-                style="flex:1.2;"
-              />
-
+              <input class="e-qte" type="text" placeholder="Quantité" style="flex:0 1 96px;" />
+              <input class="e-remarque" type="text" placeholder="Remarque" style="flex:1.2;" />
             </div>
-
             <div class="edit-actions">
-
-              <button
-                type="submit"
-                class="save"
-              >
-                Enregistrer
-              </button>
-
-              <button
-                type="button"
-                class="cancel"
-              >
-                Annuler
-              </button>
-
+              <button type="submit" class="save">Enregistrer</button>
+              <button type="button" class="cancel">Annuler</button>
             </div>
-
           </form>
         `;
-
-
         const eNom = li.querySelector(".e-nom");
         const eQte = li.querySelector(".e-qte");
         const eRemarque = li.querySelector(".e-remarque");
-
-
         eNom.value = it.nom;
         eQte.value = it.qte || "";
         eRemarque.value = it.remarque || "";
-
-
-        li.querySelector(".cancel").onclick = () => {
-
-          window.__app.editingId = null;
-
-          renderList();
-        };
-
-
-        li.querySelector(".edit-form").addEventListener(
-          "submit",
-          async (e) => {
-
-            e.preventDefault();
-
-            const nom = eNom.value.trim();
-
-            if (!nom) return;
-
-
-            try {
-
-              await window.__app.updateItem(
-                it.id,
-                {
-                  nom,
-                  qte: eQte.value.trim(),
-                  remarque: eRemarque.value.trim()
-                }
-              );
-
-              window.__app.editingId = null;
-
-              renderList();
-
-            } catch (err) {
-
-              setStatus(
-                "Erreur de modification, réessaie.",
-                true
-              );
-
-              console.error(err);
-            }
+        li.querySelector(".cancel").onclick = () => { window.__app.editingId = null; renderList(); };
+        li.querySelector(".edit-form").addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const nom = eNom.value.trim();
+          if (!nom) return;
+          try {
+            await window.__app.updateItem(it.id, { nom, qte: eQte.value.trim(), remarque: eRemarque.value.trim() });
+            window.__app.editingId = null;
+          } catch (err) {
+            setStatus("Erreur de modification, réessaie.", true);
+            console.error(err);
           }
-        );
-
-
+        });
         ul.appendChild(li);
-
         return;
       }
-
-
-      /* MODE NORMAL */
 
       li.innerHTML = `
         <div class="info">
-
           <div class="nom"></div>
-
-          ${
-            it.qte
-              ? `<div class="qte"></div>`
-              : ""
-          }
-
-          ${
-            it.remarque
-              ? `<div class="remarque"></div>`
-              : ""
-          }
-
+          ${it.qte ? `<div class="qte"></div>` : ""}
+          ${it.remarque ? `<div class="remarque"></div>` : ""}
         </div>
-
         <div class="item-actions">
-
-          <button
-            class="edit"
-            title="Modifier"
-          >
-            ✎
-          </button>
-
-          <button
-            class="del"
-            title="Supprimer"
-          >
-            ×
-          </button>
-
+          <button class="edit" title="Modifier">✎</button>
+          <button class="del" title="Supprimer">×</button>
         </div>
       `;
-
-
       li.querySelector(".nom").textContent = it.nom;
-
-
-      if (it.qte){
-
-        li.querySelector(".qte").textContent = it.qte;
-      }
-
-
-      if (it.remarque){
-
-        li.querySelector(".remarque").textContent = it.remarque;
-      }
-
-
-      /* BOUTON MODIFIER */
-
-      li.querySelector(".edit").onclick = () => {
-
-        window.__app.editingId = it.id;
-
-        renderList();
-      };
-
-
-      /* BOUTON SUPPRIMER */
-
+      if (it.qte) li.querySelector(".qte").textContent = it.qte;
+      if (it.remarque) li.querySelector(".remarque").textContent = it.remarque;
+      li.querySelector(".edit").onclick = () => { window.__app.editingId = it.id; renderList(); };
       const delBtn = li.querySelector(".del");
-
-
       delBtn.onclick = () => {
-
         delBtn.classList.add("flash");
         li.classList.add("deleting");
-
         delBtn.disabled = true;
-
-
         setTimeout(() => {
-
-          if (window.__app.deleteItem){
-
-            window.__app.deleteItem(it.id);
-          }
-
+          window.__app.deleteItem && window.__app.deleteItem(it.id);
         }, 200);
       };
-
-
       ul.appendChild(li);
-
     });
-
-
     listEl.appendChild(ul);
   }
 
-
-  function renderLoyalty(){
-
-    const {
-      activeStore,
-      loyaltyCards,
-      loyaltyReady,
-      editingLoyalty
-    } = window.__app;
-
-
-    const saved = loyaltyCards[activeStore];
-
-
-    if (!loyaltyReady){
-
-      loyaltyEl.innerHTML = "";
-
-      return;
-    }
-
-
-    /* MODE MODIFICATION */
-
-    if (editingLoyalty){
-
-      loyaltyEl.innerHTML = `
-
-        <div class="loyalty">
-
-          <div class="loyalty-title">
-            Carte de fidélité — ${activeStore}
-          </div>
-
-          <form
-            class="loyalty-form"
-            id="loyaltyForm"
-          >
-
-            <input
-              type="text"
-              id="loyaltyInput"
-              placeholder="Numéro de la carte"
-            />
-
-            <button type="submit">
-              Enregistrer
-            </button>
-
-          </form>
-
-        </div>
-      `;
-
-
-      const input =
-        document.getElementById("loyaltyInput");
-
-
-      input.value = saved || "";
-
-
-      document
-        .getElementById("loyaltyForm")
-        .addEventListener(
-          "submit",
-          async (e) => {
-
-            e.preventDefault();
-
-            const code = input.value.trim();
-
-            if (!code) return;
-
-
-            try {
-
-              await window.__app.saveLoyaltyCard(
-                activeStore,
-                code
-              );
-
-              window.__app.editingLoyalty = false;
-
-              renderLoyalty();
-
-            } catch (err) {
-
-              setStatus(
-                "Erreur d'enregistrement de la carte, réessaie.",
-                true
-              );
-
-              console.error(err);
-            }
-          }
-        );
-
-      return;
-    }
-
-
-    /* AUCUNE CARTE */
-
-    if (!saved){
-
-      loyaltyEl.innerHTML = `
-
-        <div class="loyalty">
-
-          <div class="loyalty-title">
-            Carte de fidélité — ${activeStore}
-          </div>
-
-          <button
-            class="loyalty-empty-btn"
-            id="addLoyaltyBtn"
-          >
-            + Ajouter une carte de fidélité
-          </button>
-
-        </div>
-      `;
-
-
-      document
-        .getElementById("addLoyaltyBtn")
-        .onclick = () => {
-
-          window.__app.editingLoyalty = true;
-
-          renderLoyalty();
-        };
-
-
-      return;
-    }
-
-
-    /* CARTE EXISTANTE */
-
-    loyaltyEl.innerHTML = `
-
-      <div class="loyalty">
-
-        <div class="loyalty-title">
-          Carte de fidélité — ${activeStore}
-        </div>
-
-        <div class="loyalty-view">
-
-          <svg id="loyaltyBarcode"></svg>
-
-          <div class="loyalty-code"></div>
-
-          <button
-            class="loyalty-edit-btn"
-          >
-            Modifier
-          </button>
-
-        </div>
-
-      </div>
-    `;
-
-
-    loyaltyEl
-      .querySelector(".loyalty-code")
-      .textContent = saved;
-
-
-    loyaltyEl
-      .querySelector(".loyalty-edit-btn")
-      .onclick = () => {
-
-        window.__app.editingLoyalty = true;
-
-        renderLoyalty();
-      };
-
-
-    try {
-
-      JsBarcode(
-        "#loyaltyBarcode",
-        saved,
-        {
-          format: "CODE128",
-          displayValue: false,
-          height: 60,
-          margin: 6
-        }
-      );
-
-    } catch (e) {
-
-      /*
-        Code non compatible avec un code-barres.
-        Le numéro reste visible.
-      */
-
-      console.error(
-        "Impossible de générer le code-barres :",
-        e
-      );
-    }
+  function setStatus(msg, isErr){
+    statusEl.textContent = msg || "";
+    statusEl.className = "status" + (isErr ? " err" : "");
   }
-
 
   function refreshSubmitState(){
-
-    submitBtn.disabled =
-      !window.__app.ready ||
-      !inputNom.value.trim();
-
-
-    submitBtn.textContent =
-      window.__app.ready
-        ? "Ajouter"
-        : "Connexion…";
+    submitBtn.disabled = !window.__app.ready || !inputNom.value.trim();
+    submitBtn.textContent = window.__app.ready ? "Ajouter" : "Connexion…";
   }
+  inputNom.addEventListener("input", refreshSubmitState);
 
-
-  inputNom.addEventListener(
-    "input",
-    refreshSubmitState
-  );
-
-
-  /* AJOUT D'UN ARTICLE */
-
-  form.addEventListener(
-    "submit",
-    async (e) => {
-
-      e.preventDefault();
-
-
-      if (
-        !window.__app.ready ||
-        !window.__app.addItem
-      ){
-
-        setStatus(
-          "Toujours en train de se connecter, réessaie dans un instant.",
-          true
-        );
-
-        return;
-      }
-
-
-      const nom = inputNom.value.trim();
-
-      if (!nom) return;
-
-
-      const qte =
-        inputQte.value.trim();
-
-
-      const remarque =
-        inputRemarque.value.trim();
-
-
-      submitBtn.disabled = true;
-
-
-      try {
-
-        await window.__app.addItem({
-
-          store:
-            window.__app.activeStore,
-
-          nom,
-
-          qte,
-
-          remarque
-
-        });
-
-
-        inputNom.value = "";
-        inputQte.value = "";
-        inputRemarque.value = "";
-
-        inputNom.focus();
-
-        setStatus("");
-
-
-      } catch (err) {
-
-        setStatus(
-          "Erreur d'ajout, réessaie.",
-          true
-        );
-
-        console.error(err);
-
-      } finally {
-
-        refreshSubmitState();
-      }
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!window.__app.ready || !window.__app.addItem) {
+      setStatus("Toujours en train de se connecter, réessaie dans un instant.", true);
+      return;
     }
-  );
+    const nom = inputNom.value.trim();
+    if (!nom) return;
+    const qte = inputQte.value.trim();
+    const remarque = inputRemarque.value.trim();
+    submitBtn.disabled = true;
+    try {
+      await window.__app.addItem({ store: window.__app.activeStore, nom, qte, remarque });
+      inputNom.value = "";
+      inputQte.value = "";
+      inputRemarque.value = "";
+      inputNom.focus();
+      setStatus("");
+    } catch (err) {
+      setStatus("Erreur d'ajout, réessaie.", true);
+      console.error(err);
+    } finally {
+      refreshSubmitState();
+    }
+  });
 
-
-  /* Exposés pour Firebase */
-
-  window.__app.renderList =
-    renderList;
-
-  window.__app.renderTabs =
-    renderTabs;
-
-  window.__app.renderLoyalty =
-    renderLoyalty;
-
-  window.__app.setStatus =
-    setStatus;
-
-  window.__app.refreshSubmitState =
-    refreshSubmitState;
-
-
-  /* RENDU INITIAL */
+  // Exposés pour que le script Firebase (module) puisse déclencher un nouvel affichage
+  window.__app.renderList = renderList;
+  window.__app.renderTabs = renderTabs;
+  window.__app.setStatus = setStatus;
+  window.__app.refreshSubmitState = refreshSubmitState;
 
   renderTabs();
-
   renderList();
-
-  renderLoyalty();
-
   refreshSubmitState();
-
-  setStatus(
-    "Connexion à la liste en cours…"
-  );
-
+  setStatus("Connexion à la liste en cours…");
 </script>
 
-
-<!-- Firebase -->
+<!-- Firebase (gratuit) pour la synchro en temps réel entre vos deux téléphones -->
 <script type="module">
-
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
   import {
-    initializeApp
-  } from
-    "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-
-
-  import {
-    getFirestore,
-    collection,
-    addDoc,
-    deleteDoc,
-    updateDoc,
-    setDoc,
-    doc,
-    onSnapshot,
-    query,
-    orderBy,
-    serverTimestamp
-  } from
-    "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
-
+    getFirestore, collection, addDoc, deleteDoc, updateDoc, doc,
+    onSnapshot, query, orderBy, serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
   const firebaseConfig = {
-
-    apiKey:
-      "AIzaSyCmUr3kgh1alYxd-LOAAZlzFdW8is3LTh4",
-
-    authDomain:
-      "j---shopping-list-2c904.firebaseapp.com",
-
-    projectId:
-      "j---shopping-list-2c904",
-
-    storageBucket:
-      "j---shopping-list-2c904.firebasestorage.app",
-
-    messagingSenderId:
-      "872014163579",
-
-    appId:
-      "1:872014163579:web:0be12f52ef4b577ab67cde"
+    apiKey: "AIzaSyCmUr3kgh1alYxd-LOAAZlzFdW8is3LTh4",
+    authDomain: "j---shopping-list-2c904.firebaseapp.com",
+    projectId: "j---shopping-list-2c904",
+    storageBucket: "j---shopping-list-2c904.firebasestorage.app",
+    messagingSenderId: "872014163579",
+    appId: "1:872014163579:web:0be12f52ef4b577ab67cde"
   };
 
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const itemsRef = collection(db, "items");
 
-  const app =
-    initializeApp(firebaseConfig);
+  onSnapshot(query(itemsRef, orderBy("createdAt", "desc")), (snap) => {
+    window.__app.allItems = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    window.__app.ready = true;
+    window.__app.renderTabs();
+    window.__app.renderList();
+    window.__app.refreshSubmitState();
+    window.__app.setStatus("");
+  }, (err) => {
+    window.__app.setStatus("Connexion à la base impossible. Vérifie ta config Firebase.", true);
+    console.error(err);
+  });
 
-
-  const db =
-    getFirestore(app);
-
-
-  const itemsRef =
-    collection(db, "items");
-
-
-  const cardsRef =
-    collection(db, "loyaltyCards");
-
-
-  /* CARTES DE FIDÉLITÉ */
-
-  onSnapshot(
-    cardsRef,
-
-    (snap) => {
-
-      const cards = {};
-
-      snap.docs.forEach(d => {
-
-        cards[d.id] =
-          d.data().code;
-
-      });
-
-
-      window.__app.loyaltyCards =
-        cards;
-
-      window.__app.loyaltyReady =
-        true;
-
-      window.__app.renderLoyalty();
-
-    },
-
-    (err) => {
-
-      console.error(
-        "Erreur cartes fidélité :",
-        err
-      );
-
-    }
-  );
-
-
-  window.__app.saveLoyaltyCard =
-    (store, code) => {
-
-      return setDoc(
-        doc(db, "loyaltyCards", store),
-        {
-          code
-        }
-      );
-
-    };
-
-
-  /* LISTE DES COURSES */
-
-  onSnapshot(
-
-    query(
-      itemsRef,
-      orderBy(
-        "createdAt",
-        "desc"
-      )
-    ),
-
-    (snap) => {
-
-      window.__app.allItems =
-        snap.docs.map(
-          d => ({
-            id: d.id,
-            ...d.data()
-          })
-        );
-
-
-      window.__app.ready =
-        true;
-
-
-      window.__app.renderTabs();
-
-      window.__app.renderList();
-
-      window.__app.refreshSubmitState();
-
-      window.__app.setStatus("");
-
-    },
-
-    (err) => {
-
-      window.__app.setStatus(
-        "Connexion à la base impossible. Vérifie ta config Firebase.",
-        true
-      );
-
+  window.__app.addItem = (item) => addDoc(itemsRef, { ...item, createdAt: serverTimestamp() });
+  window.__app.updateItem = (id, data) => updateDoc(doc(db, "items", id), data);
+  window.__app.deleteItem = async (id) => {
+    try {
+      await deleteDoc(doc(db, "items", id));
+    } catch (err) {
+      window.__app.setStatus("Erreur de suppression, réessaie.", true);
       console.error(err);
-
     }
-  );
-
-
-  /* AJOUT */
-
-  window.__app.addItem =
-    (item) => {
-
-      return addDoc(
-        itemsRef,
-        {
-          ...item,
-          createdAt:
-            serverTimestamp()
-        }
-      );
-
-    };
-
-
-  /* MODIFICATION */
-
-  window.__app.updateItem =
-    (id, data) => {
-
-      return updateDoc(
-        doc(db, "items", id),
-        data
-      );
-
-    };
-
-
-  /* SUPPRESSION */
-
-  window.__app.deleteItem =
-    async (id) => {
-
-      try {
-
-        await deleteDoc(
-          doc(db, "items", id)
-        );
-
-      } catch (err) {
-
-        window.__app.setStatus(
-          "Erreur de suppression, réessaie.",
-          true
-        );
-
-        console.error(err);
-      }
-    };
-
+  };
 </script>
 
 </body>
